@@ -5,30 +5,14 @@ function AllTicketDash() {
   const [trips, setTrips] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tripsPerPage] = useState(7);
+  const [filteredTrips, setFilteredTrips] = useState([]);
 
-
-
-
-
-
-
-  // for Filter 
-
+  // Filters
   const [flightNumFilter, setFlightNumFilter] = useState("");
   const [arrivalTimeFilter, setArrivalTimeFilter] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
   const [destinationFilter, setDestinationFilter] = useState("");
   const [availableSeatsFilter, setAvailableSeatsFilter] = useState("");
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -48,6 +32,22 @@ function AllTicketDash() {
     fetchTrips();
   }, []);
 
+  useEffect(() => {
+    const applyFilters = () => {
+      const filtered = trips.filter(trip => {
+        return (
+          (!flightNumFilter || (trip.flightNum && trip.flightNum.toLowerCase().includes(flightNumFilter.toLowerCase()))) &&
+          (!arrivalTimeFilter || (trip.arrivalTime && trip.arrivalTime.toLowerCase().includes(arrivalTimeFilter.toLowerCase()))) &&
+          (!priceFilter || (trip.price && trip.price.toString().includes(priceFilter.toString()))) &&
+          (!destinationFilter || (trip.destination && trip.destination.toLowerCase().includes(destinationFilter.toLowerCase()))) &&
+          (!availableSeatsFilter || (trip.Availableseats && trip.Availableseats.toString().includes(availableSeatsFilter.toString())))
+        );
+      });
+      setFilteredTrips(filtered);
+    };
+    applyFilters();
+  }, [trips, flightNumFilter, arrivalTimeFilter, priceFilter, destinationFilter, availableSeatsFilter]);
+
   const handleremove = async (id) => {
     try {
       await axios.delete(`https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips/${id}.json`);
@@ -56,15 +56,6 @@ function AllTicketDash() {
       console.error('Error deleting trip:', error);
     }
   };
-
-
-
-
-
-
-
-
-
 
   const handleupdate = async (id) => {
     try {
@@ -88,53 +79,12 @@ function AllTicketDash() {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-  // Filter trips based on filter values
-  const filteredTrips = trips.filter(trip => {
-    return (
-      (!flightNumFilter || trip.flightNum.toLowerCase().includes(flightNumFilter.toLowerCase())) &&
-      (!arrivalTimeFilter || trip.arrivalTime.toLowerCase().includes(arrivalTimeFilter.toLowerCase())) &&
-      (!priceFilter || trip.price.toString().includes(priceFilter.toString())) &&
-      (!destinationFilter || trip.destination.toLowerCase().includes(destinationFilter.toLowerCase())) &&
-      (!availableSeatsFilter || trip.Availableseats.toString().includes(availableSeatsFilter.toString()))
-    );
-  });
-
-
-
-
-
-
-
-
-
-
-
   // Pagination
   const indexOfLastTrip = currentPage * tripsPerPage;
   const indexOfFirstTrip = indexOfLastTrip - tripsPerPage;
   const currentTrips = filteredTrips.slice(indexOfFirstTrip, indexOfLastTrip);
 
   const paginate = pageNumber => setCurrentPage(pageNumber);
-
-
-
-
-
-
-
-
-
-
 
   return (
     <div className="bg-gray-100 min-h-screen p-4 md:p-8 lg:p-20 ml-20 mx-auto ">
@@ -146,7 +96,7 @@ function AllTicketDash() {
             placeholder="Flight Number"
             value={flightNumFilter}
             onChange={(e) => setFlightNumFilter(e.target.value)}
-            className="p-2 border border-gray-300  rounded-xl	"
+            className="p-2 border border-gray-300  rounded-xl"
           />
           <input
             type="text"
@@ -178,7 +128,7 @@ function AllTicketDash() {
           />
         </div>
       </div>
-      <div className="overflow-x-auto shadow-xl rounded-3xl	  ">
+      <div className="overflow-x-auto shadow-xl rounded-3xl">
         <table className="min-w-full bg-white border border-gray-200 ">
           <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal ">
             <tr>
@@ -220,7 +170,7 @@ function AllTicketDash() {
         </table>
       </div>
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-4  ">
+      <div className="flex justify-center items-center mt-4">
         {Array.from({ length: Math.ceil(filteredTrips.length / tripsPerPage) }, (_, i) => (
           <button
             key={i}
