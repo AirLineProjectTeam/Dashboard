@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend } from "chart.js";
+import { Bar, Pie, Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, LineElement, Title, Tooltip, Legend, PointElement } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, Title, Tooltip, Legend, PointElement);
 
 function MainDashboard() {
   const [users, setUsers] = useState([]);
@@ -70,8 +70,8 @@ function MainDashboard() {
       {
         label: '# of Users with Coupon',
         data: couponCounts,
-        backgroundColor: 'rgba(54, 162, 235, 0.8)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(54, 162, 235)',
+        borderColor: 'rgba(54, 162, 235, 9)',
         borderWidth: 1,
       },
     ],
@@ -84,8 +84,8 @@ function MainDashboard() {
         label: '# of Users by Status',
         data: statusCounts,
         backgroundColor: [
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235)',
+          'rgba(255, 99, 132)',
         ],
         borderColor: [
           'rgba(54, 162, 235, 1)',
@@ -111,23 +111,37 @@ function MainDashboard() {
       {
         label: '# of Trips by Destination',
         data: destinationCounts,
-        backgroundColor: 'rgba(255, 99, 132, 0.8)', // Red color for destinations
+        backgroundColor: 'rgba(255, 99, 132)', // Red color for destinations
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
+        fill: false,
+        tension: 0.1,
       },
     ],
   };
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-lg ml-20 mt-10 flex w-[50%]">
-      <div className="chart-container w-1/3 m-5">
-        <Bar data={couponChartData} />
+    <div className="relative overflow-x-auto sm:rounded-lg m-10 bg-white flex justify-between shadow-md rounded-md">
+      <div className="chart-container w-1/3 m-5 flex flex-col items-center bg-white p-5">
+        <h2 className="text-xl font-bold mb-2">Coupon Usage</h2>
+        <Bar data={couponChartData}  className="mt-40"/>
+        <p className="text-center mt-2">
+          This bar chart shows the distribution of users based on coupon usage. The first bar represents users with "No Coupon" and has a value of 2.
+        </p>
       </div>
-      <div className="chart-container w-1/3 m-5">
+      <div className="chart-container w-1/3 m-5 flex flex-col items-center bg-white p-5">
+        <h2 className="text-xl font-bold mb-2">User Status</h2>
         <Pie data={statusChartData} />
+        <p className="text-center mt-2">
+          This pie chart displays the distribution of users by status. The blue section represents active users, while the red section represents inactive users. 
+        </p>
       </div>
-      <div className="chart-container w-1/3 m-5">
-        <Bar data={destinationChartData} />
+      <div className="chart-container w-1/3 m-5 flex flex-col items-center bg-white p-5">
+        <h2 className="text-xl font-bold mb-2">Trip Destinations</h2>
+        <Line data={destinationChartData} className="mt-40"/>
+        <p className="text-center mt-2">
+          This line chart shows the number of trips by destination. Each point on the chart represents a destination and the number of trips to that destination.
+        </p>
       </div>
     </div>
   );

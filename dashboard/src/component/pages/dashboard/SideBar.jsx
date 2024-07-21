@@ -37,7 +37,7 @@ function SideBar() {
           <Typography variant="h5" color="blue-gray">
             Dashboard
           </Typography> <br />
-          <img src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745" alt="" className="w-[10rem] inline mr-2" />  <span>Name</span>
+          <img src="https://i.pinimg.com/564x/5a/83/19/5a8319142257cb937fbd91a16422e369.jpg" alt="" className="w-[20%] inline mr-2" />  <span>Tasneem Abuarqob</span>
         </div>
         <List>
           <ListItem className="hover:bg-red-200">
