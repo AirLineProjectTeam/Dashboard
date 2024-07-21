@@ -1,15 +1,9 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+
 import { useState } from "react";
-import { auth } from "../../firebase/firebase-config";
-
+import { auth } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
-import SignInwithGoogle from "./signInWIthGoogle";
-
-import { getUserData } from "./Controllers/getUserData";
-import formBackground from "./assets/bglsignup.png";
-import background from "./assets/backg.jpg";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
-import { checkExpiration } from "./Controllers/checkCopounExpiration";
 
 function Login() {
   const navigate = useNavigate();
@@ -21,17 +15,17 @@ function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       const currentUser = auth.currentUser;
-      let user = await getUserData(currentUser.uid);
+      
 
-      if (user) {
+      if (currentUser) {
         toast.success("User logged in Successfully", {
           position: "top-center",
         });
-        navigate("/");
-        checkExpiration(user);
+        navigate("/Dashboard");
+        
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
 
       toast.error(error.message, {
         position: "bottom-center",
@@ -42,19 +36,11 @@ function Login() {
   return (
     <div
       className="flex items-center justify-center min-h-screen  bg-gray-100"
-      style={{
-        backgroundImage: `url(${background})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      
     >
       <div
         className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md"
-        style={{
-          backgroundImage: `url(${formBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        
       >
         <h3 className="text-2xl font-semibold text-center mb-6">Login</h3>
         <form onSubmit={handleSubmit}>
@@ -87,7 +73,8 @@ function Login() {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full py-2 px-4 bg-red-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              
             >
               Submit
             </button>
@@ -97,7 +84,7 @@ function Login() {
             New user{" "}
             <a className="text-blue-600 hover:underline">Register Here</a>
           </p>
-          <SignInwithGoogle />
+          
         </form>
       </div>
     </div>

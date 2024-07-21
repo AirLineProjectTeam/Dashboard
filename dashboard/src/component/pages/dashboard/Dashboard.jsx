@@ -1,40 +1,36 @@
-import { Link } from 'react-router-dom'; 
-import React, {useEffect} from 'react';
-import instance from "../../firebase/instance";
-import AddTicket from './formDashboard/AddTicket';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import SideBar from './SideBar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './sign in/Signin';
 import MainDashboard from './MainpageDashoard/MainDashboard';
+import AddTicket from './formDashboard/AddTicket';
 import MessageAdmin from './messageforadmin/MessageAdmin';
 import AllTicketDash from './alltickets/AllTicketsDash';
-import Profile from './profiledash/ProfileDash'; 
+import Profile from './profiledash/ProfileDash';
 
+function App() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/';
+  const containerClasses = isLoginPage ? 'bg-gray-100' : 'flex bg-gray-100';
 
-  
+  return (
+    <div className={containerClasses}>
+      {!isLoginPage && <SideBar />}
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/MainDashboard" element={<MainDashboard />} />
+        <Route path="/AddTicket" element={<AddTicket />} />
+        <Route path="/MessageAdmin" element={<MessageAdmin />} />
+        <Route path="/AllTicketDash" element={<AllTicketDash />} />
+        <Route path="/Profile" element={<Profile />} />
+      </Routes>
+    </div>
+  );
+}
 
-    function Dashboard() {
-        
-
-        return(
-            <Router>
-      <div className="flex bg-gray-100">
-        <SideBar />
-        <Routes>
-          <Route path="/MainDashboard" element={<MainDashboard />} />
-          <Route path="/AddTicket" element={<AddTicket />} />
-          <Route path="/MessageAdmin" element={<MessageAdmin />} />
-          <Route path="/AllTicketDash" element={<AllTicketDash />} />
-          <Route path="/Profile" element={<Profile />} />
-        </Routes>
-        
-      </div>
+export default function Root() {
+  return (
+    <Router>
+      <App />
     </Router>
-
-        );
-
-      }
-      
-      export default Dashboard;
-
-
-      
+  );
+}

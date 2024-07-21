@@ -4,7 +4,24 @@ import axios from "axios";
 function AllTicketDash() {
   const [trips, setTrips] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [tripsPerPage] = useState(10); 
+  const [tripsPerPage] = useState(7);
+
+
+
+
+
+
+
+  // for Filter 
+
+  const [flightNumFilter, setFlightNumFilter] = useState("");
+  const [arrivalTimeFilter, setArrivalTimeFilter] = useState("");
+  const [priceFilter, setPriceFilter] = useState("");
+  const [destinationFilter, setDestinationFilter] = useState("");
+  const [availableSeatsFilter, setAvailableSeatsFilter] = useState("");
+
+
+
 
 
 
@@ -30,9 +47,6 @@ function AllTicketDash() {
     };
     fetchTrips();
   }, []);
-
-
-
 
   const handleremove = async (id) => {
     try {
@@ -83,10 +97,32 @@ function AllTicketDash() {
 
 
 
+
+  // Filter trips based on filter values
+  const filteredTrips = trips.filter(trip => {
+    return (
+      (!flightNumFilter || trip.flightNum.toLowerCase().includes(flightNumFilter.toLowerCase())) &&
+      (!arrivalTimeFilter || trip.arrivalTime.toLowerCase().includes(arrivalTimeFilter.toLowerCase())) &&
+      (!priceFilter || trip.price.toString().includes(priceFilter.toString())) &&
+      (!destinationFilter || trip.destination.toLowerCase().includes(destinationFilter.toLowerCase())) &&
+      (!availableSeatsFilter || trip.Availableseats.toString().includes(availableSeatsFilter.toString()))
+    );
+  });
+
+
+
+
+
+
+
+
+
+
+
   // Pagination
   const indexOfLastTrip = currentPage * tripsPerPage;
   const indexOfFirstTrip = indexOfLastTrip - tripsPerPage;
-  const currentTrips = trips.slice(indexOfFirstTrip, indexOfLastTrip);
+  const currentTrips = filteredTrips.slice(indexOfFirstTrip, indexOfLastTrip);
 
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
@@ -99,11 +135,52 @@ function AllTicketDash() {
 
 
 
+
   return (
-    <div className="bg-gray-100 min-h-screen p-4 md:p-8 lg:p-20 ml-20 mx-auto">
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+    <div className="bg-gray-100 min-h-screen p-4 md:p-8 lg:p-20 ml-20 mx-auto ">
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-4">Filter Trips</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          <input
+            type="text"
+            placeholder="Flight Number"
+            value={flightNumFilter}
+            onChange={(e) => setFlightNumFilter(e.target.value)}
+            className="p-2 border border-gray-300  rounded-xl	"
+          />
+          <input
+            type="text"
+            placeholder="Arrival Time"
+            value={arrivalTimeFilter}
+            onChange={(e) => setArrivalTimeFilter(e.target.value)}
+            className="p-2 border border-gray-300 rounded-xl"
+          />
+          <input
+            type="text"
+            placeholder="Price"
+            value={priceFilter}
+            onChange={(e) => setPriceFilter(e.target.value)}
+            className="p-2 border border-gray-300 rounded-xl"
+          />
+          <input
+            type="text"
+            placeholder="Destination"
+            value={destinationFilter}
+            onChange={(e) => setDestinationFilter(e.target.value)}
+            className="p-2 border border-gray-300 rounded-xl"
+          />
+          <input
+            type="text"
+            placeholder="Available Seats"
+            value={availableSeatsFilter}
+            onChange={(e) => setAvailableSeatsFilter(e.target.value)}
+            className="p-2 border border-gray-300 rounded-xl"
+          />
+        </div>
+      </div>
+      <div className="overflow-x-auto shadow-xl rounded-3xl	  ">
+        <table className="min-w-full bg-white border border-gray-200 ">
+          <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal ">
             <tr>
               <th className="py-3 px-6 text-left">Flight Number</th>
               <th className="py-3 px-6 text-left">Arrival Time</th>
@@ -143,12 +220,12 @@ function AllTicketDash() {
         </table>
       </div>
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-4">
-        {Array.from({ length: Math.ceil(trips.length / tripsPerPage) }, (_, i) => (
+      <div className="flex justify-center items-center mt-4  ">
+        {Array.from({ length: Math.ceil(filteredTrips.length / tripsPerPage) }, (_, i) => (
           <button
             key={i}
             onClick={() => paginate(i + 1)}
-            className={`py-2 px-4 mx-1 bg-white border border-gray-300 ${currentPage === i + 1 ? 'bg-gray-200' : ''}`}
+            className={`py-2 px-4 mx-1 bg-white  border border-gray-300 rounded-md  ${currentPage === i + 1 ? 'bg-gray-200 hover:bg-red-500' : ''}`}
           >
             {i + 1}
           </button>
