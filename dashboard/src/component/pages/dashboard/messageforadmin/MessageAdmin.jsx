@@ -1,53 +1,122 @@
-import React from "react";
+
+import React, { useRef,useEffect, useState } from 'react';
+import axios from 'axios';
+ 
+//  import emailjs from  "emailjs-com";
+
+ import emailjs from '@emailjs/browser';;
 
 function MessageAdmin(){
+  const [Msg, setMsg] = useState([]);
 
+  useEffect(() => {
+    fetchMsg();
+  }, []);
 
+  const fetchMsg = () => {
+    console.log("Fetching  Msg..");
+    axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/messages.json')
+      .then(res => {
+        console.log("Msgs fetched:", res.data);
+
+        const MsgObject = res.data;
+        if (MsgObject) {
+        //   const MsgArray = Object.entries(MsgObject).map(([id, Msg]) => ({ id, ...Msg })); // Convert object to array with id
+          const MsgArray = Object.keys(MsgObject).map(key =>({id: key ,... res.data[key]})); // Convert object to array with id
+          setMsg(MsgArray); // Update state
+    
+
+          console.log("Msg array:", MsgObject);
+        } else {
+          console.log("No Msg found.");
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error); // Handle error
+      });
+  };
+  const addMsg = async () => {
+    const newMsg = {
+      email: prompt("Enter email"),
+     name: prompt("Enter name"),
+     message: prompt("Enter message"),
+     };
+
+    // if (!newMsg.email || !newMsg.text || !newMsg.message) return;
+
+    try {
+      console.log('Adding new Msg with data:', newMsg);
+      const res = await axios.post('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/messages.json', newMsg);
+      console.log("messages added successfully:", res.data);
+      fetchMsg();
+    } catch (error) {
+      console.error('Error adding book:', error);
+    }
+  };
+
+   
+    const form = useRef();
+  
+    const sendEmail = (e) => {
+      e.preventDefault();
+  
+      emailjs
+        .sendForm('service_920k6ej', 'template_xrkks0r', form.current, {
+          publicKey: '1re8sc7hxYtfnqCax',
+     
+        })
+        .then(
+          () => {
+
+            
+            console.log('SUCCESS!');
+            alert("Congrats, your Email has been sent !")
+          },
+          (error) => {
+            console.log('FAILED...', error.text);
+          },
+        );
+    }
     
     return(
 
         
 
-        <>
-        <div className="flex items-start gap-2.5">
-  <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese image" />
-  <div className="flex flex-col gap-1 w-full max-w-[320px]">
-    <div className="flex items-center space-x-2 rtl:space-x-reverse">
-      <span className="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</span>
-      <span className="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
-    </div>
-    <div className="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-      <p className="text-sm font-normal text-gray-900 dark:text-white">That's awesome. I think our users will really appreciate the improvements.</p>
-    </div>
-    <span className="text-sm font-normal text-gray-500 dark:text-gray-400">Delivered</span>
-  </div>
-  <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" data-dropdown-placement="bottom-start" className="inline-flex self-center items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600" type="button">
-    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-      <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
-    </svg>
-  </button>
-  <div id="dropdownDots" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700 dark:divide-gray-600 ">
-    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-      <li>
-        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reply</a>
-      </li>
-      <li>
-        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Forward</a>
-      </li>
-      <li>
-        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Copy</a>
-      </li>
-      <li>
-        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report</a>
-      </li>
-      <li>
-        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-      </li>
-    </ul>
-  </div>
-</div>
+      <>
+      <button onClick={addMsg}  >Add </button>
+      <div  >
+      <table class="table-auto bg-gray-100  className='mt-8 ml-32 mr-32'">
+          <thead>
+            <tr>
+              <th class="px-4 py-2">Message</th>
+              <th class="px-4 py-2">Username</th>
+              <th class="px-4 py-2">Email</th>
+            </tr>
+          </thead>
+          <tbody>
+      {
+        Msg
+   
+        .map(e => (
 
-        </>
+            <tr>
+              <td class="border px-4 py-2">{e.message}</td>
+              <td class="border px-4 py-2">{e.name}</td>
+              <td class="border px-4 py-2">{e.email}</td>
+            </tr>
+           
+        ))} </tbody></table>
+      </div>
+
+     
+               
+            <form ref={form} onSubmit={sendEmail}  className='mt-8 ml-32 mr-32' >
+  
+  {/* <input type="text" name="from"   placeholder='from'/>  */}
+  
+       Send Email <input type="email"  name="to" placeholder='to' className='bg-gray-100' />   <input className='bg-gray-100'  type="text" name="message" />  <input type="submit" value="Send"  className='bg-gray-100 pl-4 pr-4' />
+</form> 
+    </>
     )
 
 }
