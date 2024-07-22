@@ -4,12 +4,26 @@ import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+// مكونات التشارت!!
+
+
+
+
 
 function Profile() {
+
+
+
+
   const [users, setUsers] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
   const [newCouponCode, setNewCouponCode] = useState('');
   const [newDiscount, setNewDiscount] = useState('');
+
+
+
+
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -19,7 +33,7 @@ function Profile() {
           const fetchedUsers = Object.keys(response.data).map(key => ({
             id: key,
             ...response.data[key],
-            coupon: response.data[key].coupon || {},
+            coupon: response.data[key].coupon || {}, 
             status: response.data[key].status || 'active'
           }));
           setUsers(fetchedUsers);
@@ -28,17 +42,32 @@ function Profile() {
         console.error('Error fetching users:', error);
       }
     };
-
     fetchUsers();
   }, []);
+
+
+
+
+// edit 
 
   const handleEditCoupon = (userId) => {
     setEditingUserId(userId);
   };
 
+
+
+
+
+
+
+
+
+  // save
   const handleSaveCoupon = async () => {
     try {
       const updatedCoupon = { code: newCouponCode, discount: newDiscount };
+      //If the update is successful, the function updates the users state array by mapping over
+      // it and replacing the user with the updated coupon information if their ID matches the editingUserId
       await axios.patch(`https://airline-tickets-46241-default-rtdb.firebaseio.com/Users/${editingUserId}/coupon.json`, updatedCoupon);
       setUsers(users.map(user => user.id === editingUserId ? { ...user, coupon: updatedCoupon } : user));
       setEditingUserId(null);
@@ -46,8 +75,15 @@ function Profile() {
       setNewDiscount('');
     } catch (error) {
       console.error('Error updating coupon:', error);
-    }
-  };
+    }};
+
+
+
+
+
+
+
+
 
   const handleDeactivateAccount = async (userId) => {
     try {
