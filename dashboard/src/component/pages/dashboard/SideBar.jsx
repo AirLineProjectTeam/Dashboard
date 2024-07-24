@@ -67,88 +67,58 @@ function SideBar() {
         <Card className="h-full w-full p-4">
           <Typography variant="h5" color="blue-gray">
             Dashboard
-          </Typography>
-          <div className="mb-4 p-2 flex items-center">
-            <img
-              src="https://i.pinimg.com/564x/5a/83/19/5a8319142257cb937fbd91a16422e369.jpg"
-              alt="User Avatar"
-              className="w-16 h-16 rounded-full object-cover mr-2"
-            />
-            <div>
-              <span className="text-lg font-semibold">Tasneem Abuarqob</span>
-            </div>
-          </div>
-          <List>
-            <ListItem className="hover:bg-red-200">
-              <ListItemPrefix>
-                <PresentationChartBarIcon className="h-5 w-5 text-red-500" />
-              </ListItemPrefix>
-              <Link
-                to="/MainDashboard"
-                className="text-black hover:text-red-500"
-              >
-                Dashboard
-              </Link>
-            </ListItem>
-            <ListItem className="hover:bg-red-200">
-              <ListItemPrefix>
-                <Cog6ToothIcon className="h-5 w-5 text-red-500" />
-              </ListItemPrefix>
-              <Link to="/AddTicket" className="text-black hover:text-red-500">
-                Add new Ticket
-              </Link>
-            </ListItem>
-            <ListItem className="hover:bg-red-200">
-              <ListItemPrefix>
-                <UserCircleIcon className="h-5 w-5 text-red-500" />
-              </ListItemPrefix>
-              <Link
-                to="/AllTicketDash"
-                className="text-black hover:text-red-500"
-              >
-                Tickets
-              </Link>
-            </ListItem>
-            <ListItem className="hover:bg-red-200">
-              <ListItemPrefix>
-                <UserCircleIcon className="h-5 w-5 text-red-500" />
-              </ListItemPrefix>
-              <Link to="/Profile" className="text-black hover:text-red-500">
-                User Profile
-              </Link>
-            </ListItem>
-            <ListItem className="hover:bg-red-200">
-              <ListItemPrefix>
-                <InboxIcon className="h-5 w-5 text-red-500" />
-              </ListItemPrefix>
-              <Link
-                to="/MessageAdmin"
-                className="text-black hover:text-red-500"
-              >
-                Inbox
-              </Link>
-              <ListItemSuffix>
-                <Chip
-                  value="14"
-                  size="sm"
-                  variant="ghost"
-                  color="blue-gray"
-                  className="rounded-full text-red-500 border-red-500"
-                />
-              </ListItemSuffix>
-            </ListItem>
-            <ListItem
-              className="hover:bg-red-200 cursor-pointer"
-              onClick={handleLogout}
-            >
-              <ListItemPrefix>
-                <PowerIcon className="h-5 w-5 text-red-500" />
-              </ListItemPrefix>
-              <span className="text-black hover:text-red-500">Log Out</span>
-            </ListItem>
-          </List>
-        </Card>
-      </div>
+          </Typography> <br />
+          <img src="https://i.pinimg.com/564x/5a/83/19/5a8319142257cb937fbd91a16422e369.jpg" alt="" className="w-[20%] inline mr-2" />  <span>Tasneem Abuarqob</span>
+        </div>
+        <List>
+          <ListItem className="hover:bg-blue-200">
+            <ListItemPrefix>
+              <PresentationChartBarIcon className="h-5 w-5 text-blue-900" />
+            </ListItemPrefix>
+            <Link to="/MainDashboard" className="text-black hover:text-blue-900">Dashboard</Link>
+          </ListItem>
+          <ListItem className="hover:bg-blue-200">
+            <ListItemPrefix>
+              <Cog6ToothIcon className="h-5 w-5 text-blue-900" />
+            </ListItemPrefix>
+            <Link to="/AddTicket" className="text-black hover:text-blue-900">Add new Ticket</Link>
+          </ListItem>
+          <ListItem className="hover:bg-blue-200">
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5 text-blue-900" />
+            </ListItemPrefix>
+            <Link to="/AllTicketDash" className="text-black hover:text-blue-900">Tickets</Link>
+          </ListItem>
+          <ListItem className="hover:bg-blue-200">
+            <ListItemPrefix>
+              <UserCircleIcon className="h-5 w-5 text-blue-900" />
+            </ListItemPrefix>
+            <Link to="/Profile" className="text-black hover:text-blue-900">User Profile</Link>
+          </ListItem>
+          <ListItem className="hover:bg-blue-200">
+            <ListItemPrefix>
+              <InboxIcon className="h-5 w-5 text-blue-900" />
+            </ListItemPrefix>
+            <Link to="/MessageAdmin" className="text-black hover:text-blue-900">Inbox</Link>
+            <ListItemSuffix>
+              <Chip
+                value="14"
+                size="sm"
+                variant="ghost"
+                color="blue-gray"
+                className="rounded-full text-blue-500 border-blue-900"
+              />
+            </ListItemSuffix>
+          </ListItem>
+          <ListItem className="hover:bg-blue-200 cursor-pointer" onClick={handleLogout}>
+            <ListItemPrefix>
+              <PowerIcon className="h-5 w-5 text-blue-900" />
+            </ListItemPrefix>
+            <span className="text-black hover:text-blue-900">Log Out</span>
+          </ListItem>
+        </List>
+      </Card>
+
     </>
   );
 }

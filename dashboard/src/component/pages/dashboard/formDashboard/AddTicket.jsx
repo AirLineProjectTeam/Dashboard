@@ -220,203 +220,211 @@ const AddTicket = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex justify-center items-center mx-auto p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-full sm:max-w-3xl md:max-w-4xl">
-        <form onSubmit={handlepost}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
-            <div>
-              <label
-                htmlFor="tripName"
-                className="block mb-2 text-sm font-medium text-gray-900"
+
+    
+    <div className="bg-gray-100 min-h-screen flex justify-center items-center mx-auto">
+    <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+      <form onSubmit={handlepost}>
+        <div className="grid grid-cols-3 gap-6 mb-6">
+          <div>
+            <label htmlFor="tripName" className="block mb-2 text-sm font-medium text-gray-900">Trip Name</label>
+            <input
+              type="text"
+              id="tripName"
+              name="tripName"
+              value={data.tripName}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Trip Name"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="destination" className="block mb-2 text-sm font-medium text-gray-900">Destination</label>
+            <input
+              type="text"
+              id="destination"
+              name="destination"
+              value={data.destination}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Destination"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="StartDate" className="block mb-2 text-sm font-medium text-gray-900">Start Date</label>
+            <input
+              type="date"
+              id="StartDate"
+              name="StartDate"
+              value={data.StartDate}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="EndDate" className="block mb-2 text-sm font-medium text-gray-900">End Date</label>
+            <input
+              type="date"
+              id="EndDate"
+              name="EndDate"
+              value={data.EndDate}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="arrivalTime" className="block mb-2 text-sm font-medium text-gray-900">Arrival Time</label>
+            <input
+              type="text"
+              id="arrivalTime"
+              name="arrivalTime"
+              value={data.arrivalTime}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Arrival Time"
+            />
+          </div>
+          <div>
+            <label htmlFor="departureTime" className="block mb-2 text-sm font-medium text-gray-900">Departure Time</label>
+            <input
+              type="text"
+              id="departureTime"
+              name="departureTime"
+              value={data.departureTime}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Departure Time"
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900">Description</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              value={data.description}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Description"
+            />
+          </div>
+          <div>
+            <label htmlFor="flightNum" className="block mb-2 text-sm font-medium text-gray-900">Flight Number</label>
+            <input
+              type="text"
+              id="flightNum"
+              name="flightNum"
+              value={data.flightNum}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Flight Number"
+            />
+          </div>
+          <div>
+            <label htmlFor="from" className="block mb-2 text-sm font-medium text-gray-900">From</label>
+            <input
+              type="text"
+              id="from"
+              name="from"
+              value={data.from}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter From"
+            />
+          </div>
+          <div>
+            <label htmlFor="gate" className="block mb-2 text-sm font-medium text-gray-900">Gate</label>
+            <input
+              type="text"
+              id="gate"
+              name="gate"
+              value={data.gate}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Gate"
+            />
+          </div>
+          <div>
+            <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900">Price</label>
+            <input
+              type="text"
+              id="price"
+              name="price"
+              value={data.price}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Price"
+            />
+          </div>
+          <div>
+            <label htmlFor="priceVIP" className="block mb-2 text-sm font-medium text-gray-900">Price VIP</label>
+            <input
+              type="text"
+              id="priceVIP"
+              name="priceVIP"
+              value={data.priceVIP}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Price VIP"
+            />
+          </div>
+          <div>
+            <label htmlFor="reservedTicket" className="block mb-2 text-sm font-medium text-gray-900">Reserved Ticket</label>
+            <input
+              type="text"
+              id="reservedTicket"
+              name="reservedTicket"
+              value={data.reservedTicket}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Reserved Ticket"
+            />
+          </div>
+          <div>
+            <label htmlFor="reservedTicketVip" className="block mb-2 text-sm font-medium text-gray-900">Reserved Ticket VIP</label>
+            <input
+              type="text"
+              id="reservedTicketVip"
+              name="reservedTicketVip"
+              value={data.reservedTicketVip}
+              onChange={handleChange}
+              className="input-field"
+              placeholder="Enter Reserved Ticket VIP"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-900 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white font-medium rounded-lg text-sm py-2 px-5 w-full sm:w-auto"
+        >
+          Add Ticket
+        </button>
+      </form>
+
+      <div>
+        {tickets
+          .filter((ticket) => ticket.deleted === 0)
+          .map((ticket) => (
+            <div key={ticket.id} className="bg-white p-4 my-4 rounded-lg shadow-lg">
+              <h1 className="text-lg font-medium text-gray-900">{ticket.tripName}</h1>
+              <p className="text-sm text-gray-700">{ticket.destination}</p>
+              <p className="text-sm text-gray-700">Start Date: {ticket.StartDate}</p>
+              <p className="text-sm text-gray-700">End Date: {ticket.EndDate}</p>
+              <button
+                className="bg-blue-900 text-white px-4 py-2 rounded-lg mt-2 mr-2"
+                onClick={() => handleRemove(ticket.id)}
               >
-                Trip Name
-              </label>
-              <input
-                type="text"
-                id="tripName"
-                name="tripName"
-                value={data.tripName}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Trip Name"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="destination"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Destination
-              </label>
-              <input
-                type="text"
-                id="destination"
-                name="destination"
-                value={data.destination}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Destination"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="StartDate"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Start Date
-              </label>
-              <input
-                type="date"
-                id="StartDate"
-                name="StartDate"
-                value={data.StartDate}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="EndDate"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                End Date
-              </label>
-              <input
-                type="date"
-                id="EndDate"
-                name="EndDate"
-                value={data.EndDate}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                required
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="arrivalTime"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Arrival Time
-              </label>
-              <input
-                type="text"
-                id="arrivalTime"
-                name="arrivalTime"
-                value={data.arrivalTime}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Arrival Time"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="departureTime"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Departure Time
-              </label>
-              <input
-                type="text"
-                id="departureTime"
-                name="departureTime"
-                value={data.departureTime}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Departure Time"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="description"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Description
-              </label>
-              <input
-                type="text"
-                id="description"
-                name="description"
-                value={data.description}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Description"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="flightNum"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Flight Number
-              </label>
-              <input
-                type="text"
-                id="flightNum"
-                name="flightNum"
-                value={data.flightNum}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Flight Number"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="from"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                From
-              </label>
-              <input
-                type="text"
-                id="from"
-                name="from"
-                value={data.from}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter From"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="gate"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Gate
-              </label>
-              <input
-                type="text"
-                id="gate"
-                name="gate"
-                value={data.gate}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Gate"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="price"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Price
-              </label>
-              <input
-                type="text"
-                id="price"
-                name="price"
-                value={data.price}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded-md"
-                placeholder="Enter Price"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="priceVIP"
-                className="block mb-2 text-sm font-medium text-gray-900"
+                Remove
+              </button>
+              <button
+                className="bg-blue-900 text-white px-4 py-2 rounded-lg mt-2"
+                onClick={() => handleUpdate(ticket.id)}
+
               >
                 Price VIP
               </label>

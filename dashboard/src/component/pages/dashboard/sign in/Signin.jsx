@@ -75,17 +75,14 @@ function Login() {
           <div className="mb-4">
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-red-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full py-2 px-4 bg-red-400 text-white font-semibold rounded-lg shadow-md hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               
             >
               Submit
             </button>
           </div>
 
-          <p className="text-sm text-gray-600 text-right">
-            New user{" "}
-            <a className="text-blue-600 hover:underline">Register Here</a>
-          </p>
+         
           
         </form>
       </div>

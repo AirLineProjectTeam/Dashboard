@@ -138,7 +138,8 @@ function MessageAdmin() {
           <div className="flex justify-center mt-2">
             <button
               type="submit"
-              className="bg-pink-500 text-white w-full max-w-xs p-2 rounded cursor-pointer hover:scale-105 transition-colors"
+              className="bg-blue-900 text-white w-full max-w-xs p-2 rounded cursor-pointer hover:scale-105 transition-colors"
+
             >
               Send
             </button>
@@ -147,14 +148,16 @@ function MessageAdmin() {
       </div>
 
       {/* Add Message Button */}
-      <div className="flex justify-center mt-2">
+      {/* <div className="flex justify-center mt-2">
+
         <button
           onClick={addMsg}
           className="bg-green-500 text-white w-full max-w-xs p-2 rounded cursor-pointer hover:scale-105 transition-colors"
         >
           Add
         </button>
-      </div>
+      </div> */}
+
     </div>
   );
 }
