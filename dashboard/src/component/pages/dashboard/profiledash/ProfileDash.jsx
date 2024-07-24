@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function Profile() {
   const [users, setUsers] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
-  const [newCouponCode, setNewCouponCode] = useState('');
-  const [newDiscount, setNewDiscount] = useState('');
+  const [newCouponCode, setNewCouponCode] = useState("");
+  const [newDiscount, setNewDiscount] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,18 +35,21 @@ function Profile() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/Users.json');
+        const response = await axios.get(
+          "https://airline-tickets-46241-default-rtdb.firebaseio.com/Users.json"
+        );
         if (response.data) {
-          const fetchedUsers = Object.keys(response.data).map(key => ({
+          const fetchedUsers = Object.keys(response.data).map((key) => ({
             id: key,
             ...response.data[key],
             coupon: response.data[key].coupon || {}, 
             status: response.data[key].status || 'active'
+
           }));
           setUsers(fetchedUsers);
         }
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
     fetchUsers();
@@ -42,36 +62,52 @@ function Profile() {
   const handleSaveCoupon = async () => {
     try {
       const updatedCoupon = { code: newCouponCode, discount: newDiscount };
-      await axios.patch(`https://airline-tickets-46241-default-rtdb.firebaseio.com/Users/${editingUserId}/coupon.json`, updatedCoupon);
-      setUsers(users.map(user => user.id === editingUserId ? { ...user, coupon: updatedCoupon } : user));
+      await axios.patch(
+        `https://airline-tickets-46241-default-rtdb.firebaseio.com/Users/${editingUserId}/coupon.json`,
+        updatedCoupon
+      );
+      setUsers(
+        users.map((user) =>
+          user.id === editingUserId ? { ...user, coupon: updatedCoupon } : user
+        )
+      );
       setEditingUserId(null);
-      setNewCouponCode('');
-      setNewDiscount('');
+      setNewCouponCode("");
+      setNewDiscount("");
     } catch (error) {
-      console.error('Error updating coupon:', error);
+      console.error("Error updating coupon:", error);
     }
   };
 
   const handleDeactivateAccount = async (userId) => {
     try {
-      await axios.patch(`https://airline-tickets-46241-default-rtdb.firebaseio.com/Users/${userId}.json`, { status: 'deactivated' });
-      setUsers(users.map(user => user.id === userId ? { ...user, status: 'deactivated' } : user));
+      await axios.patch(
+        `https://airline-tickets-46241-default-rtdb.firebaseio.com/Users/${userId}.json`,
+        { status: "deactivated" }
+      );
+      setUsers(
+        users.map((user) =>
+          user.id === userId ? { ...user, status: "deactivated" } : user
+        )
+      );
     } catch (error) {
-      console.error('Error deactivating account:', error);
+      console.error("Error deactivating account:", error);
     }
   };
 
-  const activeUsers = users.filter(user => user.status === 'active').length;
-  const deactivatedUsers = users.filter(user => user.status === 'deactivated').length;
+  const activeUsers = users.filter((user) => user.status === "active").length;
+  const deactivatedUsers = users.filter(
+    (user) => user.status === "deactivated"
+  ).length;
 
   const data = {
-    labels: ['Active Users', 'Deactivated Users'],
+    labels: ["Active Users", "Deactivated Users"],
     datasets: [
       {
-        label: '# of Users',
+        label: "# of Users",
         data: [activeUsers, deactivatedUsers],
-        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+        backgroundColor: ["rgba(75, 192, 192, 0.2)", "rgba(255, 99, 132, 0.2)"],
+        borderColor: ["rgba(75, 192, 192, 1)", "rgba(255, 99, 132, 1)"],
         borderWidth: 1,
       },
     ],
@@ -82,7 +118,7 @@ function Profile() {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
     },
     scales: {
@@ -97,6 +133,7 @@ function Profile() {
   };
 
   // Calculate current users to display based on pagination
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
@@ -235,6 +272,7 @@ function Profile() {
       <div className="w-full sm:w-1/2 mt-4 sm:mt-0">
         <div className="chart-container">
           <Bar data={data} options={options} />
+
         </div>
       </div>
     </div>

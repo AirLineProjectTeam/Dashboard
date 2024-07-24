@@ -50,31 +50,30 @@ const AddTicket = () => {
       deleted: 0,
     };
 
-    instance.put(`/trips/Trips/${tickets.length}.json`, postData).then((res) => {
-      console.log(res);
-      const updatedTickets = [
-        ...tickets,
-        { ...postData, id: res.data.name },
-      ];
-      setData({
-        tripName: "",
-        destination: "",
-        StartDate: "",
-        EndDate: "",
-        arrivalTime: "",
-        departureTime: "",
-        description: "",
-        flightNum: "",
-        from: "",
-        gate: "",
-        price: "",
-        priceVIP: "",
-        reservedTicket: "",
-        reservedTicketVip: "",
-        deleted: 0,
+    instance
+      .put(`/trips/Trips/${tickets.length}.json`, postData)
+      .then((res) => {
+        console.log(res);
+        const updatedTickets = [...tickets, { ...postData, id: res.data.name }];
+        setData({
+          tripName: "",
+          destination: "",
+          StartDate: "",
+          EndDate: "",
+          arrivalTime: "",
+          departureTime: "",
+          description: "",
+          flightNum: "",
+          from: "",
+          gate: "",
+          price: "",
+          priceVIP: "",
+          reservedTicket: "",
+          reservedTicketVip: "",
+          deleted: 0,
+        });
+        setTickets(updatedTickets);
       });
-      setTickets(updatedTickets);
-    });
   };
 
   useEffect(() => {
@@ -121,10 +120,7 @@ const AddTicket = () => {
           "Enter new Start Date",
           ticketToUpdate.StartDate
         );
-        const newEndDate = prompt(
-          "Enter new End Date",
-          ticketToUpdate.EndDate
-        );
+        const newEndDate = prompt("Enter new End Date", ticketToUpdate.EndDate);
         const newArrivalTime = prompt(
           "Enter new Arrival Time",
           ticketToUpdate.arrivalTime
@@ -141,18 +137,9 @@ const AddTicket = () => {
           "Enter new Flight Number",
           ticketToUpdate.flightNum
         );
-        const newFrom = prompt(
-          "Enter new From",
-          ticketToUpdate.from
-        );
-        const newGate = prompt(
-          "Enter new Gate",
-          ticketToUpdate.gate
-        );
-        const newPrice = prompt(
-          "Enter new Price",
-          ticketToUpdate.price
-        );
+        const newFrom = prompt("Enter new From", ticketToUpdate.from);
+        const newGate = prompt("Enter new Gate", ticketToUpdate.gate);
+        const newPrice = prompt("Enter new Price", ticketToUpdate.price);
         const newPriceVIP = prompt(
           "Enter new Price VIP",
           ticketToUpdate.priceVIP
@@ -233,6 +220,7 @@ const AddTicket = () => {
   };
 
   return (
+
     
     <div className="bg-gray-100 min-h-screen flex justify-center items-center mx-auto">
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
@@ -436,23 +424,106 @@ const AddTicket = () => {
               <button
                 className="bg-blue-900 text-white px-4 py-2 rounded-lg mt-2"
                 onClick={() => handleUpdate(ticket.id)}
+
               >
-                Update
-              </button>
+                Price VIP
+              </label>
+              <input
+                type="text"
+                id="priceVIP"
+                name="priceVIP"
+                value={data.priceVIP}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-2 rounded-md"
+                placeholder="Enter Price VIP"
+              />
             </div>
-          ))}
+            <div>
+              <label
+                htmlFor="reservedTicket"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Reserved Ticket
+              </label>
+              <input
+                type="text"
+                id="reservedTicket"
+                name="reservedTicket"
+                value={data.reservedTicket}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-2 rounded-md"
+                placeholder="Enter Reserved Ticket"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="reservedTicketVip"
+                className="block mb-2 text-sm font-medium text-gray-900"
+              >
+                Reserved Ticket VIP
+              </label>
+              <input
+                type="text"
+                id="reservedTicketVip"
+                name="reservedTicketVip"
+                value={data.reservedTicketVip}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-2 rounded-md"
+                placeholder="Enter Reserved Ticket VIP"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white font-medium rounded-lg text-sm py-2 px-5 w-full sm:w-auto"
+          >
+            Add Ticket
+          </button>
+        </form>
+
+        <div className="mt-8">
+          {tickets
+            .filter((ticket) => ticket.deleted === 0)
+            .map((ticket) => (
+              <div
+                key={ticket.id}
+                className="bg-white p-4 my-4 rounded-lg shadow-lg"
+              >
+                <h1 className="text-lg font-medium text-gray-900">
+                  {ticket.tripName}
+                </h1>
+                <p className="text-sm text-gray-700">{ticket.destination}</p>
+                <p className="text-sm text-gray-700">
+                  Start Date: {ticket.StartDate}
+                </p>
+                <p className="text-sm text-gray-700">
+                  End Date: {ticket.EndDate}
+                </p>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2 mr-2"
+                  onClick={() => handleRemove(ticket.id)}
+                >
+                  Remove
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2"
+                  onClick={() => handleUpdate(ticket.id)}
+                >
+                  Update
+                </button>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 
 export default AddTicket;
 
-
 // import React, { useEffect, useState } from "react";
 // import instance from "../../../firebase/instance";
-
 
 // const AddTicket = () => {
 
@@ -463,34 +534,31 @@ export default AddTicket;
 //     EndDate : "" ,
 //     deleted : 0 ,
 
-
 //   })
 
 //   const [tickets, setTickets] = useState([]);
 
-
-
 //   const handleChange = e =>{
-    
+
 //     // retriave the data e.target.name or .value
 //     const { name, value } = e.target;
-//        // function call back to save last update after rendering and store data 
+//        // function call back to save last update after rendering and store data
 //        setData((prevData) => ({
 //         ...prevData ,
 //         [name]: value,
 //         //name from name in const{name , value} = e.target ;
 
 //        }));
-    
+
 //     };
 
 //   // post Data to fire base
 //   const handlepost = e =>{
 //     e.preventDefault()
 //     const postData = {
-      
+
 //     arrivalTime : data.arrivalTime ,
-//     departureTime : data.departureTime, 
+//     departureTime : data.departureTime,
 //     description : data.description,
 //     destination : data.destination,
 //     flightNum : data.flightNum ,
@@ -501,7 +569,6 @@ export default AddTicket;
 //     reservedTicket : data.reservedTicket,
 //     reservedTicketVip : data.reservedTicketVip ,
 
-
 //         tripName : data.tripName ,
 //         StartDate : data.StartDate ,
 //         EndDate: data.EndDate ,
@@ -511,17 +578,17 @@ export default AddTicket;
 
 //     instance.post(`/trips/Trips.json` , postData ).then(res =>{
 //         console.log(res) ;
-//         // to handle update in websit 
+//         // to handle update in websit
 //             // and when we do new suubmition
-//             // to update my data on screen 
-//             // we do this 
+//             // to update my data on screen
+//             // we do this
 //             const updatedTickets = [
-//                 ...tickets , 
+//                 ...tickets ,
 //                 {postData , id : res.data.name}
 //             ];
 //             setData({
 //               arrivalTime : "" ,
-//               departureTime : "", 
+//               departureTime : "",
 //               description : "",
 //               destination : "",
 //               flightNum : "" ,
@@ -537,7 +604,7 @@ export default AddTicket;
 //             setTickets(updatedTickets);
 
 //         });
-    
+
 //   };
 
 //   // Function get data in catalog page :
@@ -573,17 +640,17 @@ export default AddTicket;
 //     }
 //   };
 
-// // handle update 
+// // handle update
 // const handleUpdate = async (ticketId) => {
 //     try {
 //       const ticketToUpdate = tickets.find(ticket => ticket.id === ticketId);
-  
+
 //       if (ticketToUpdate) {
 //         const newTripName = prompt("Enter new Trip Name", ticketToUpdate.tripName);
 //         const newDestination = prompt("Enter new Destination", ticketToUpdate.destination);
 //         const newStartDate = prompt("Enter new Start Date", ticketToUpdate.StartDate);
 //         const newEndDate = prompt("Enter new End Date", ticketToUpdate.EndDate);
-  
+
 //         // Update the state with new values
 //         setTickets(prevTickets =>
 //           prevTickets.map(ticket =>
@@ -598,7 +665,7 @@ export default AddTicket;
 //               : ticket
 //           )
 //         );
-  
+
 //         // Update the database with new values
 //         await instance.put(`/trips/Trips/${ticketId}.json`, {
 //           tripName: newTripName,
@@ -606,7 +673,7 @@ export default AddTicket;
 //           StartDate: newStartDate,
 //           EndDate: newEndDate,
 //         });
-  
+
 //         console.log("Updated ticket:", newTripName, newDestination, newStartDate, newEndDate);
 //       } else {
 //         console.error("Ticket not found");
@@ -615,10 +682,6 @@ export default AddTicket;
 //       console.error("Error updating ticket:", error);
 //     }
 //   };
-  
-
-  
-
 
 //   return (
 //     <div className="bg-lightBlue">
@@ -705,11 +768,8 @@ export default AddTicket;
 //           ))}
 //       </div>
 
-    
-    
 //     </div>
 //   );
 // };
 
 // export default AddTicket;
-
