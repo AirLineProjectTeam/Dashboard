@@ -1,162 +1,126 @@
-import React, { useRef, useEffect, useState } from "react";
-import axios from "axios";
-import emailjs from "@emailjs/browser";
+ 
+import React, { useRef,useEffect, useState } from 'react';
+import axios from 'axios';
+ 
+//  import emailjs from  "emailjs-com";
 
-function MessageAdmin() {
+ import emailjs from '@emailjs/browser';;
+
+function MessageAdmin(){
   const [Msg, setMsg] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
-  const [emailMessage, setEmailMessage] = useState("");
 
   useEffect(() => {
     fetchMsg();
   }, []);
 
   const fetchMsg = () => {
-    console.log("Fetching Msg..");
-    axios
-      .get(
-        "https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/messages.json"
-      )
-      .then((res) => {
+    console.log("Fetching  Msg..");
+    axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/messages.json')
+      .then(res => {
         console.log("Msgs fetched:", res.data);
 
         const MsgObject = res.data;
         if (MsgObject) {
-          const MsgArray = Object.keys(MsgObject).map((key) => ({
-            id: key,
-            ...res.data[key],
-          }));
-          setMsg(MsgArray);
-          console.log("Msg array:", MsgArray);
+        //   const MsgArray = Object.entries(MsgObject).map(([id, Msg]) => ({ id, ...Msg })); // Convert object to array with id
+          const MsgArray = Object.keys(MsgObject).map(key =>({id: key ,... res.data[key]})); // Convert object to array with id
+          setMsg(MsgArray); // Update state
+    
+
+          console.log("Msg array:", MsgObject);
         } else {
           console.log("No Msg found.");
         }
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+      .catch(error => {
+        console.error('Error fetching data:', error); // Handle error
       });
   };
-
   const addMsg = async () => {
     const newMsg = {
       email: prompt("Enter email"),
-      name: prompt("Enter name"),
-      message: prompt("Enter message"),
-    };
+     name: prompt("Enter name"),
+     message: prompt("Enter message"),
+     };
+
+    // if (!newMsg.email || !newMsg.text || !newMsg.message) return;
 
     try {
-      console.log("Adding new Msg with data:", newMsg);
-      const res = await axios.post(
-        "https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/messages.json",
-        newMsg
-      );
+      console.log('Adding new Msg with data:', newMsg);
+      const res = await axios.post('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/messages.json', newMsg);
       console.log("messages added successfully:", res.data);
       fetchMsg();
     } catch (error) {
-      console.error("Error adding book:", error);
+      console.error('Error adding book:', error);
     }
   };
 
-  const form = useRef();
+   
+    const form = useRef();
+  
+    const sendEmail = (e) => {
+      e.preventDefault();
+  
+      emailjs
+        .sendForm('service_920k6ej', 'template_xrkks0r', form.current, {
+          publicKey: '1re8sc7hxYtfnqCax',
+     
+        })
+        .then(
+          () => {
 
-  const sendEmail = (e) => {
-    e.preventDefault();
+            
+            console.log('SUCCESS!');
+            alert("Congrats, your Email has been sent !")
+          },
+          (error) => {
+            console.log('FAILED...', error.text);
+          },
+        );
+    }
+    
+    return(
 
-    const userEmail = Msg.find((user) => user.id === selectedUser)?.email;
+        
 
-    const templateParams = {
-      to: userEmail,
-      message: emailMessage,
-    };
-
-    emailjs
-      .send(
-        "service_920k6ej",
-        "template_xrkks0r",
-        templateParams,
-        "1re8sc7hxYtfnqCax"
-      )
-      .then(
-        () => {
-          console.log("SUCCESS!");
-          alert("Congrats, your Email has been sent!");
-        },
-        (error) => {
-          console.log("FAILED...", error.text);
-        }
-      );
-  };
-
-  return (
-    <div className="container h-full mx-auto p-4">
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="table-auto bg-white w-full border border-gray-200">
-          <thead className="bg-gray-200">
+      <>
+      <div className=''>
+      
+      <div className='ml-10 mt-10 w-[100%]' >
+      <table class="table-auto bg-white className=' ml-32 mr-32'">
+          <thead className='bg-gray-200  '>
             <tr>
-              <th className="px-4 py-2 text-left">Message</th>
-              <th className="px-4 py-2 text-left">Username</th>
-              <th className="px-4 py-2 text-left">Email</th>
+              <th class="px-4 py-2  ">Message</th>
+              <th class="px-4 py-2 ">Username</th>
+              <th class="px-4 py-2  ">Email</th>
             </tr>
           </thead>
           <tbody>
-            {Msg.map((e) => (
-              <tr key={e.id}>
-                <td className="border px-4 py-2">{e.message}</td>
-                <td className="border px-4 py-2">{e.name}</td>
-                <td className="border px-4 py-2">{e.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {
+        Msg
+   
+        .map(e => (
+
+            <tr>
+              <td class="border px-4 py-2 border-none">{e.message}</td>
+              <td class="border px-4 py-2 border-none">{e.name}</td>
+              <td class="border px-4 py-2 border-none">{e.email}</td>
+            </tr>
+           
+        ))} </tbody></table>
       </div>
 
-      {/* Email Form */}
-      <div className="mt-8">
-        <form ref={form} onSubmit={sendEmail} className=" gap-4">
-          <select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            className="bg-gray-100 p-2 rounded border border-gray-300"
-          >
-            <option value="" disabled>
-              Select a user
-            </option>
-            {Msg.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Message"
-            value={emailMessage}
-            onChange={(e) => setEmailMessage(e.target.value)}
-            className="bg-gray-100 p-2 rounded border border-gray-300"
-          />
-          <div className="flex justify-center mt-2">
-            <button
-              type="submit"
-              className="bg-blue-900 text-white w-full max-w-xs p-2 rounded cursor-pointer hover:scale-105 transition-colors"
-            >
-              Send
-            </button>
-          </div>
-        </form>
-      </div>
+     
+    <div >
+               
+            <form ref={form} onSubmit={sendEmail}  className='mt-8 ml-44  ' >
+  
+  {/* <input type="text" name="from"   placeholder='from'/>  */}
+  
+        <input type="email"  name="to" placeholder='to' className='bg-gray-100' />   <input className='bg-gray-100'  type="text" name="message" />  <input type="submit" value="Send"  className='bg-gray-100 pl-4 pr-4' />
+</form> </div> <button onClick={addMsg} className='ml-96 mt-36' >Add </button>
+</div>
+    </>
+    )
 
-      {/* Add Message Button */}
-      {/* <div className="flex justify-center mt-2">
-        <button
-          onClick={addMsg}
-          className="bg-green-500 text-white w-full max-w-xs p-2 rounded cursor-pointer hover:scale-105 transition-colors"
-        >
-          Add
-        </button>
-      </div> */}
-    </div>
-  );
 }
-
-export default MessageAdmin;
+export default MessageAdmin ;
