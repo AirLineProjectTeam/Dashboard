@@ -1,87 +1,92 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Bar, Pie, Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  PointElement,
-} from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, LineElement, Title, Tooltip, Legend, PointElement } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  PointElement
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, Title, Tooltip, Legend, PointElement);
 
 function MainDashboard() {
   const [users, setUsers] = useState([]);
   const [trips, setTrips] = useState([]);
 
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          "https://airline-tickets-46241-default-rtdb.firebaseio.com/Users.json"
-        );
+        const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/Users.json');
         if (response.data) {
-          const fetchedUsers = Object.keys(response.data).map((key) => ({
+          const fetchedUsers = Object.keys(response.data).map(key => ({
             id: key,
             ...response.data[key],
             coupon: response.data[key].coupon || {},
-            status: response.data[key].status || "active",
+            status: response.data[key].status || 'active'
           }));
           setUsers(fetchedUsers);
         }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
     };
+
+
+
+
+
+
+
+
+
+
+
+
 
     const fetchTrips = async () => {
-      try {
-        const response = await axios.get(
-          "https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips.json"
-        );
+    
+        const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips.json');
         if (response.data) {
-          const fetchedTrips = Object.keys(response.data).map((key) => ({
+          const fetchedTrips = Object.keys(response.data).map(key => ({
             id: key,
-            ...response.data[key],
+            ...response.data[key]
           }));
           setTrips(fetchedTrips);
-        }
-      } catch (error) {
-        console.error("Error fetching trips:", error);
-      }
+        } 
     };
-
     fetchUsers();
     fetchTrips();
   }, []);
 
+
+
+
+
+
+  // return single value !! 
+
   const couponData = users.reduce((acc, user) => {
-    const couponCode = user.coupon.code || "No Coupon";
+    const couponCode = user.coupon.code || 'No Coupon';
     acc[couponCode] = (acc[couponCode] || 0) + 1;
     return acc;
   }, {});
 
+
   const couponLabels = Object.keys(couponData);
   const couponCounts = Object.values(couponData);
 
+
+
+
+
+
+
+  //
+
   const statusData = users.reduce((acc, user) => {
-    const status = user.status || "active";
+    const status = user.status || 'active';
     acc[status] = (acc[status] || 0) + 1;
     return acc;
   }, {});
@@ -93,10 +98,10 @@ function MainDashboard() {
     labels: couponLabels,
     datasets: [
       {
-        label: "# of Users with Coupon",
+        label: '# of Users with Coupon',
         data: couponCounts,
-        backgroundColor: "rgba(54, 162, 235)",
-        borderColor: "rgba(54, 162, 235, 0.9)",
+        backgroundColor: 'rgba(54, 162, 235)',
+        borderColor: 'rgba(54, 162, 235, 9)',
         borderWidth: 1,
       },
     ],
@@ -106,20 +111,34 @@ function MainDashboard() {
     labels: statusLabels,
     datasets: [
       {
-        label: "# of Users by Status",
+        label: '# of Users by Status',
         data: statusCounts,
-        backgroundColor: ["rgba(54, 162, 235)", "rgba(255, 99, 132)"],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
+        backgroundColor: [
+          'rgba(54, 162, 235)',
+          'rgba(255, 99, 132)',
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 99, 132, 1)',
+        ],
         borderWidth: 1,
       },
     ],
   };
 
+
+
+
+
+//
+
   const destinationData = trips.reduce((acc, trip) => {
-    const destination = trip.destination || "No Destination";
+    const destination = trip.destination || 'No Destination';
     acc[destination] = (acc[destination] || 0) + 1;
     return acc;
   }, {});
+
+
 
   const destinationLabels = Object.keys(destinationData);
   const destinationCounts = Object.values(destinationData);
@@ -128,10 +147,10 @@ function MainDashboard() {
     labels: destinationLabels,
     datasets: [
       {
-        label: "# of Trips by Destination",
+        label: '# of Trips by Destination',
         data: destinationCounts,
-        backgroundColor: "rgba(255, 99, 132)", // Red color for destinations
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: 'rgba(255, 99, 132)', // Red color for destinations
+        borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
         fill: false,
         tension: 0.1,
@@ -139,54 +158,37 @@ function MainDashboard() {
     ],
   };
 
-  return (
-    <>
-      <div className="block p-5">
-        <div className="p-5 bg-white flex gap-4">
-          <div className="w-full sm:w-1/2 lg:w-1/3 p-3 bg-white">
-            <h2 className="text-xl font-bold mb-2">Coupon Usage</h2>
-            <div className="chart-wrapper">
-              <Bar
-                data={couponChartData}
-                options={{ responsive: true, maintainAspectRatio: false }}
-                height={200}
-              />
-            </div>
-            <p className="text-center mt-2">
-              This bar chart shows the distribution of users based on coupon
-              usage.
-            </p>
-          </div>
-          <div className="w-full sm:w-1/2 lg:w-1/3 p-3 bg-white">
-            <h2 className="text-xl font-bold mb-2">User Status</h2>
-            <div className="chart-wrapper">
-              <Pie
-                data={statusChartData}
-                options={{ responsive: true, maintainAspectRatio: false }}
-                height={200}
-              />
-            </div>
-            <p className="text-center mt-2">
-              This pie chart displays the distribution of users by status.
-            </p>
-          </div>
-        </div>
 
-        <div className=" sm:w-1/2 lg:w-1/3 p-3 bg-white">
-          <h2 className="text-xl font-bold mb-2">Trip Destinations</h2>
-          <div className="chart-wrapper">
-            <Line
-              data={destinationChartData}
-              options={{ responsive: true, maintainAspectRatio: false }}
-              height={200}
-            />
-          </div>
-          <p className="text-center mt-2">
-            This line chart shows the number of trips by destination.
-          </p>
-        </div>
+
+
+
+
+
+
+  return (
+    <div className="relative overflow-x-auto sm:rounded-lg m-10 bg-white flex justify-between shadow-md rounded-md">
+      <div className="chart-container w-1/3 m-5 flex flex-col items-center bg-white p-5">
+        <h2 className="text-xl font-bold mb-2">Coupon Usage</h2>
+        <Bar data={couponChartData}  className="mt-40"/>
+        <p className="text-center mt-2">
+          This bar chart shows the distribution of users based on coupon usage. The first bar represents users with "No Coupon" and has a value of 2.
+        </p>
       </div>
-    </>
+      <div className="chart-container w-1/3 m-5 flex flex-col items-center bg-white p-5">
+        <h2 className="text-xl font-bold mb-2">User Status</h2>
+        <Pie data={statusChartData} />
+        <p className="text-center mt-2">
+          This pie chart displays the distribution of users by status. The blue section represents active users, while the red section represents inactive users. 
+        </p>
+      </div>
+      <div className="chart-container w-1/3 m-5 flex flex-col items-center bg-white p-5">
+        <h2 className="text-xl font-bold mb-2">Trip Destinations</h2>
+        <Line data={destinationChartData} className="mt-40"/>
+        <p className="text-center mt-2">
+          This line chart shows the number of trips by destination. Each point on the chart represents a destination and the number of trips to that destination.
+        </p>
+      </div>
+    </div>
   );
 }
 
