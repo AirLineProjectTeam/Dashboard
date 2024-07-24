@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Modal from "react-modal";
+
+// Custom styles for Modal
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+Modal.setAppElement('#root');
 
 function AllTicketDash() {
   const [trips, setTrips] = useState([]);
@@ -14,19 +29,19 @@ function AllTicketDash() {
   const [destinationFilter, setDestinationFilter] = useState("");
   const [availableSeatsFilter, setAvailableSeatsFilter] = useState("");
 
+  // Modal state
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editTrip, setEditTrip] = useState({});
+
   useEffect(() => {
     const fetchTrips = async () => {
-      try {
-        const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips.json');
-        if (response.data) {
-          const fetchedTrips = Object.keys(response.data).map(key => ({
-            id: key,
-            ...response.data[key]
-          }));
-          setTrips(fetchedTrips);
-        }
-      } catch (error) {
-        console.error('Error fetching trips:', error);
+      const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips.json');
+      if (response.data) {
+        const fetchedTrips = Object.keys(response.data).map(key => ({
+          id: key,
+          ...response.data[key]
+        }));
+        setTrips(fetchedTrips);
       }
     };
     fetchTrips();
@@ -49,31 +64,34 @@ function AllTicketDash() {
   }, [trips, flightNumFilter, arrivalTimeFilter, priceFilter, destinationFilter, availableSeatsFilter]);
 
   const handleremove = async (id) => {
-    try {
-      await axios.delete(`https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips/${id}.json`);
-      setTrips(prevTrips => prevTrips.filter(trip => trip.id !== id));
-    } catch (error) {
-      console.error('Error deleting trip:', error);
-    }
+    await axios.delete(`https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips/${id}.json`);
+    setTrips(prevTrips => prevTrips.filter(trip => trip.id !== id));
   };
 
-  const handleupdate = async (id) => {
+  const handleupdate = (id) => {
+    const ticketToUpdate = trips.find(trip => trip.id === id);
+    setEditTrip(ticketToUpdate);
+    setModalIsOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalIsOpen(false);
+    setEditTrip({});
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditTrip(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSave = async () => {
     try {
-      const ticketToUpdate = trips.find(trip => trip.id === id);
-
-      if (ticketToUpdate) {
-        const newDestination = prompt("Enter new destination", ticketToUpdate.destination);
-
-        if (newDestination !== null) { // Prompt returns null if cancelled
-          const updatedTrip = { ...ticketToUpdate, destination: newDestination };
-
-          await axios.put(`https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips/${id}.json`, updatedTrip);
-
-          setTrips(prevTrips => prevTrips.map(trip =>
-            trip.id === id ? updatedTrip : trip
-          ));
-        }
-      }
+      await axios.put(`https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips/${editTrip.id}.json`, editTrip);
+      setTrips(prevTrips => prevTrips.map(trip => trip.id === editTrip.id ? editTrip : trip));
+      setModalIsOpen(false);
     } catch (error) {
       console.error('Error updating trip:', error);
     }
@@ -84,7 +102,7 @@ function AllTicketDash() {
   const indexOfFirstTrip = indexOfLastTrip - tripsPerPage;
   const currentTrips = filteredTrips.slice(indexOfFirstTrip, indexOfLastTrip);
 
-  const paginate = pageNumber => setCurrentPage(pageNumber);
+  const totalPages = Math.ceil(filteredTrips.length / tripsPerPage);
 
   return (
     <div className="bg-gray-100 min-h-screen p-4 md:p-8 lg:p-20 ml-20 mx-auto ">
@@ -96,7 +114,7 @@ function AllTicketDash() {
             placeholder="Flight Number"
             value={flightNumFilter}
             onChange={(e) => setFlightNumFilter(e.target.value)}
-            className="p-2 border border-gray-300  rounded-xl"
+            className="p-2 border border-gray-300 rounded-xl"
           />
           <input
             type="text"
@@ -170,17 +188,97 @@ function AllTicketDash() {
         </table>
       </div>
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-4">
-        {Array.from({ length: Math.ceil(filteredTrips.length / tripsPerPage) }, (_, i) => (
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 mx-1 bg-blue-900 text-white rounded disabled:bg-gray-300"
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
           <button
-            key={i}
-            onClick={() => paginate(i + 1)}
-            className={`py-2 px-4 mx-1 bg-white  border border-gray-300 rounded-md  ${currentPage === i + 1 ? 'bg-gray-200 hover:bg-red-500' : ''}`}
+            key={index + 1}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`px-4 py-2 mx-1 ${currentPage === index + 1 ? 'bg-blue-900' : 'bg-blue-900'} text-white rounded`}
           >
-            {i + 1}
+            {index + 1}
           </button>
         ))}
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 mx-1 bg-blue-900 text-white rounded disabled:bg-gray-300"
+        >
+          Next
+        </button>
       </div>
+
+      {/* Modal for editing trip */}
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={handleModalClose}
+        style={customStyles}
+        contentLabel="Edit Trip"
+      >
+        <h2>Edit Trip</h2>
+        <form className="space-y-4">
+          <div>
+            <label className="block text-gray-700">Flight Number</label>
+            <input
+              type="text"
+              name="flightNum"
+              value={editTrip.flightNum || ''}
+              onChange={handleInputChange}
+              className="p-2 border border-gray-300 rounded-xl w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Arrival Time</label>
+            <input
+              type="text"
+              name="arrivalTime"
+              value={editTrip.arrivalTime || ''}
+              onChange={handleInputChange}
+              className="p-2 border border-gray-300 rounded-xl w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Price</label>
+            <input
+              type="text"
+              name="price"
+              value={editTrip.price || ''}
+              onChange={handleInputChange}
+              className="p-2 border border-gray-300 rounded-xl w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Destination</label>
+            <input
+              type="text"
+              name="destination"
+              value={editTrip.destination || ''}
+              onChange={handleInputChange}
+              className="p-2 border border-gray-300 rounded-xl w-full"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Available Seats</label>
+            <input
+              type="text"
+              name="Availableseats"
+              value={editTrip.Availableseats || ''}
+              onChange={handleInputChange}
+              className="p-2 border border-gray-300 rounded-xl w-full"
+            />
+          </div>
+          <div className="flex justify-end">
+            <button type="button" onClick={handleModalClose} className="px-4 py-2 mr-2 bg-gray-500 text-white rounded-xl">Cancel</button>
+            <button type="button" onClick={handleSave} className="px-4 py-2 bg-blue-900 text-white rounded-xl">Save</button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

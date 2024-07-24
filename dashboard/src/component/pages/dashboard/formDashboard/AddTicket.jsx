@@ -412,7 +412,7 @@ const AddTicket = () => {
 
         <button
           type="submit"
-          className="bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white font-medium rounded-lg text-sm py-2 px-5 w-full sm:w-auto"
+          className="bg-blue-900 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white font-medium rounded-lg text-sm py-2 px-5 w-full sm:w-auto"
         >
           Add Ticket
         </button>
@@ -428,13 +428,13 @@ const AddTicket = () => {
               <p className="text-sm text-gray-700">Start Date: {ticket.StartDate}</p>
               <p className="text-sm text-gray-700">End Date: {ticket.EndDate}</p>
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2 mr-2"
+                className="bg-blue-900 text-white px-4 py-2 rounded-lg mt-2 mr-2"
                 onClick={() => handleRemove(ticket.id)}
               >
                 Remove
               </button>
               <button
-                className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2"
+                className="bg-blue-900 text-white px-4 py-2 rounded-lg mt-2"
                 onClick={() => handleUpdate(ticket.id)}
               >
                 Update

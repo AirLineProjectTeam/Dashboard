@@ -11,6 +11,10 @@ function Profile() {
   const [newCouponCode, setNewCouponCode] = useState('');
   const [newDiscount, setNewDiscount] = useState('');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 3; // Number of users to display per page
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -19,7 +23,7 @@ function Profile() {
           const fetchedUsers = Object.keys(response.data).map(key => ({
             id: key,
             ...response.data[key],
-            coupon: response.data[key].coupon || {},
+            coupon: response.data[key].coupon || {}, 
             status: response.data[key].status || 'active'
           }));
           setUsers(fetchedUsers);
@@ -28,7 +32,6 @@ function Profile() {
         console.error('Error fetching users:', error);
       }
     };
-
     fetchUsers();
   }, []);
 
@@ -93,6 +96,14 @@ function Profile() {
     },
   };
 
+  // Calculate current users to display based on pagination
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(users.length / usersPerPage);
+
   return (
     <div className="relative overflow-x-auto sm:rounded-lg ml-20 w-[70%] mt-10 flex flex-wrap">
       <div className="w-full sm:w-1/2 pr-4">
@@ -136,7 +147,7 @@ function Profile() {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
+            {currentUsers.map(user => (
               <tr key={user.id} className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 ${user.status === 'deactivated' ? 'opacity-50' : ''}`}>
                 <td className="w-4 p-4">
                   <div className="flex items-center">
@@ -186,7 +197,7 @@ function Profile() {
                     <button onClick={handleSaveCoupon} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Save</button>
                   ) : (
                     <>
-                      <button onClick={() => handleEditCoupon(user.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                      <button onClick={() => handleEditCoupon(user.id)} className="font-medium text-blue-900 dark:text-blue-500 hover:underline">Edit</button>
                       <button onClick={() => handleDeactivateAccount(user.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline ml-2">Deactivate</button>
                     </>
                   )}
@@ -195,6 +206,31 @@ function Profile() {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 mx-1 bg-blue-900 text-white rounded disabled:bg-gray-300"
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+              className={`px-4 py-2 mx-1 ${currentPage === index + 1 ? 'bg-blue-900' : 'bg-blue-900'} text-white rounded`}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 mx-1 bg-blue-900 text-white rounded disabled:bg-gray-300"
+          >
+            Next
+          </button>
+        </div>
       </div>
       <div className="w-full sm:w-1/2 mt-4 sm:mt-0">
         <div className="chart-container">

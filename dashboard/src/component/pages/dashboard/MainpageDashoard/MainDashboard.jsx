@@ -9,9 +9,18 @@ function MainDashboard() {
   const [users, setUsers] = useState([]);
   const [trips, setTrips] = useState([]);
 
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
         const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/Users.json');
         if (response.data) {
           const fetchedUsers = Object.keys(response.data).map(key => ({
@@ -22,13 +31,22 @@ function MainDashboard() {
           }));
           setUsers(fetchedUsers);
         }
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
     };
 
+
+
+
+
+
+
+
+
+
+
+
+
     const fetchTrips = async () => {
-      try {
+    
         const response = await axios.get('https://airline-tickets-46241-default-rtdb.firebaseio.com/trips/Trips.json');
         if (response.data) {
           const fetchedTrips = Object.keys(response.data).map(key => ({
@@ -36,15 +54,18 @@ function MainDashboard() {
             ...response.data[key]
           }));
           setTrips(fetchedTrips);
-        }
-      } catch (error) {
-        console.error('Error fetching trips:', error);
-      }
+        } 
     };
-
     fetchUsers();
     fetchTrips();
   }, []);
+
+
+
+
+
+
+  // return single value !! 
 
   const couponData = users.reduce((acc, user) => {
     const couponCode = user.coupon.code || 'No Coupon';
@@ -52,8 +73,17 @@ function MainDashboard() {
     return acc;
   }, {});
 
+
   const couponLabels = Object.keys(couponData);
   const couponCounts = Object.values(couponData);
+
+
+
+
+
+
+
+  //
 
   const statusData = users.reduce((acc, user) => {
     const status = user.status || 'active';
@@ -96,11 +126,19 @@ function MainDashboard() {
     ],
   };
 
+
+
+
+
+//
+
   const destinationData = trips.reduce((acc, trip) => {
     const destination = trip.destination || 'No Destination';
     acc[destination] = (acc[destination] || 0) + 1;
     return acc;
   }, {});
+
+
 
   const destinationLabels = Object.keys(destinationData);
   const destinationCounts = Object.values(destinationData);
@@ -119,6 +157,13 @@ function MainDashboard() {
       },
     ],
   };
+
+
+
+
+
+
+
 
   return (
     <div className="relative overflow-x-auto sm:rounded-lg m-10 bg-white flex justify-between shadow-md rounded-md">

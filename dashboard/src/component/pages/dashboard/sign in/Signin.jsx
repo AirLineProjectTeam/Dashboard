@@ -6,7 +6,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
 
 function Login() {
-  const navigate = useNavigate();
+  // navigate to main page from login
+  const navigate = useNavigate(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,14 +15,15 @@ function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      console.log(1)
       const currentUser = auth.currentUser;
-      
 
       if (currentUser) {
+      
         toast.success("User logged in Successfully", {
           position: "top-center",
         });
-        navigate("/Dashboard");
+        navigate("/MainDashboard");
         
       }
     } catch (error) {
